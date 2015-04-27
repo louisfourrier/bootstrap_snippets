@@ -52,7 +52,7 @@ class Snippet < ActiveRecord::Base
   ##-- Callbacks -------------------
   after_save :update_research_name
   after_create :generate_random_token
-  before_save :save_bootstrap_version
+  before_update :save_bootstrap_version
 
   ##-- Associations ----------------
   # has_many :roles, dependent: :destroy
@@ -87,7 +87,13 @@ class Snippet < ActiveRecord::Base
   end
   
   def bootstrap_version
-    @bootstrap_version || self.bootstrapversion.name
+    if @bootstrap_version
+      return @bootstrap_version
+    elsif self.bootstrapversion
+      return self.bootstrapversion.name
+    else
+      return nil
+    end
   end
   
   # Save the bootstrap version given by the virtual attribute bootstrap_version
@@ -101,7 +107,6 @@ class Snippet < ActiveRecord::Base
       self.bootstrapversion_id = bversion.id
     end
   end
-  
   
   ### FOR PARSING ###
 

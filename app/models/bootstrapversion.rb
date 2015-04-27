@@ -35,6 +35,7 @@ class Bootstrapversion < ActiveRecord::Base
   
   ##-- Methods ---------------------
   
+  # For the creation of the first bootstrapverion
   def self.name_list
     ["3.2.0", "3.1.0", "3.3.0", "3.0.3", "3.0.1", "3.0.2", "3.0.0", "2.3.2"]
   end
@@ -51,6 +52,7 @@ class Bootstrapversion < ActiveRecord::Base
     return "http://maxcdn.bootstrapcdn.com/bootstrap/"+ self.name + "/js/bootstrap.min.js"
   end
   
+  # At the deployment create the first boostrap versions
   def self.create_first_versions
     self.name_list.each do |name|
       Bootstrapversion.create(:name => name)
