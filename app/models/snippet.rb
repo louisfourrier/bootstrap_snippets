@@ -175,7 +175,7 @@ class Snippet < ActiveRecord::Base
   
   # Find the URL of the Iframe to have a clear Iframe Html Content
   def update_original_iframe_url
-    iframe_url = self.snippet_preview['src'].to_s
+    iframe_url = self.html_content_to_html.css('iframe').first['src'].to_s
     self.update(:iframe_url_original => iframe_url)
   end
   

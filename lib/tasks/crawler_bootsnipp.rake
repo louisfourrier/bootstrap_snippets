@@ -55,8 +55,6 @@ task :snippet_scrapper_download => :environment do
   require 'uri'
 
   HEADERS_HASH = {"User-Agent" => "Ruby/#{RUBY_VERSION}", "read_timeout" => "30"}
-  # Base Url
-  BASE_URL = "http://poesie.webnet.fr/lesgrandsclassiques/poemes/"
   
   Snippet.find_each do |snippet|
       #puts snippet.title.to_s
@@ -78,8 +76,6 @@ task :snippet_iframes_download => :environment do
   require 'uri'
 
   HEADERS_HASH = {"User-Agent" => "Ruby/#{RUBY_VERSION}", "read_timeout" => "30"}
-  # Base Url
-  BASE_URL = "http://poesie.webnet.fr/lesgrandsclassiques/poemes/"
   
   Snippet.find_each do |snippet|
       #puts snippet.title.to_s
