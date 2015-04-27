@@ -175,8 +175,12 @@ class Snippet < ActiveRecord::Base
   
   # Find the URL of the Iframe to have a clear Iframe Html Content
   def update_original_iframe_url
+    begin
     iframe_url = self.html_content_to_html.css('iframe').first['src'].to_s
     self.update(:iframe_url_original => iframe_url)
+    rescue
+      puts "error in the update"
+    end
   end
   
   def update_number_views

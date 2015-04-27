@@ -81,10 +81,12 @@ task :snippet_iframes_download => :environment do
       #puts snippet.title.to_s
       puts "Crawling of " + snippet.original_url.to_s
       href = snippet.iframe_url_original.to_s
+      if !href.empty?
       page = Nokogiri::HTML(open(href))
       url = href.to_s
       html_content = page.to_html.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "") 
       snippet.update(:iframe_html_content => html_content)
+      end
   end
   
 end
