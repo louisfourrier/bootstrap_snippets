@@ -1,0 +1,304 @@
+<% provide(:title, "Editing " + @snippet.title) %>
+<% provide(:description, "Editing a snippet" ) %>
+<% provide(:keywords, "create snippets, bootstrap, html snippets, css code, javascript, developers")%>
+
+<div class="row">
+	
+	<div class="col-sm-3 col-md-2 sidebar">
+		<h3 class="text-center">Options</h3>
+		<div class="col-md-12">
+			<%= select('snippet', 'bootstrap_version', Bootstrapversion.all.collect {|b| [ b.bootstrap_name, b.name ] }, {include_blank: 'None', selected: @snippet.bootstrapversion.name}, class: "form-control")%>
+			
+			
+		</div>
+
+		<hr />
+
+		<div class="col-md-12">
+			<a href="#" id="save-snippet" class="btn btn-primary ladda-button" data-style="expand-right">Save snippet</a>
+			<%= link_to "Full Screen", iframe_snippet_path(@snippet), class: "btn btn-default"%>
+			<%= link_to 'Destroy', @snippet, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+		</div>
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	
+		<h1 class="page-header text-center" id="snippet-name"><%= @snippet.title%></h1>
+
+		<div class="col-sm-10 col-sm-offset-1 text-center">
+			<div id="nav-widget" class="btn-group btn-group-justified">
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#preview" aria-controls="preview" role="tab" data-toggle="tab" id="show-preview">
+						<i class="fa fa-map-marker fa-2x"></i> Preview</span>
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#html-code" aria-controls="html-code" role="tab" data-toggle="tab" id="show-html">
+						<i class="fa fa-code fa-2x"></i> HTML
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#css-code" aria-controls="css-code" role="tab" data-toggle="tab" id="show-css">
+						<i class="fa fa-code fa-2x"></i> CSS
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#js-code" aria-controls="js-code" role="tab" data-toggle="tab" id="show-js">
+						<i class="fa fa-code fa-2x"></i> JS
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div role="tabpanel" class="col-sm-12">
+
+			<!-- Nav tabs -->
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="preview">
+					<div id="playground-container">
+						<div id="preview-container" >
+							<iframe id="snippet-preview" class="preview-iframe" height="496" src="<%= iframe_snippet_path(@snippet) %>"></iframe>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="html-code">
+
+					<div>
+
+						<div id="editor-html" class="ace-editor-class"><%= @snippet.html_code%></div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="css-code">
+					<div>
+
+						<div id="editor-css" class="ace-editor-class"><%= @snippet.css_code%></div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="js-code">
+					<div>
+
+						<div id="editor-js" class="ace-editor-class"><%= @snippet.js_code%></div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		
+		<div class="col-md-12">
+			<hr />
+			<div class="alert alert-warning"><i class="fa fa-warning"></i> If you want to provide information about how to use or customize your snippet, integrate it in the HTML code to display it on the preview</div>
+		</div>
+
+	</div>
+	
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+(function($) {
+var snippetSaved = false;
+var htmleditor = ace.edit("editor-html");
+var jseditor = ace.edit("editor-js");
+var csseditor = ace.edit("editor-css");
+var version = '3.3.0';
+var snippetTitle = $('#snippet-name');
+
+// If it changes the bootstrap version come back to the preview
+$('select[name="snippet[bootstrap_version]"]').change(function(e){
+version = $(this).val();
+$('#show-preview').click();
+});
+
+function setEditorOptions(editor, type){
+editor.setTheme("ace/theme/clouds");
+editor.setHighlightActiveLine(false);
+editor.getSession().setMode("ace/mode/"+type);
+editor.commands.addCommand({
+name: 'save',
+bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+exec: function(editor) {
+$('#save-snippet').click();
+},
+readOnly: false
+});
+editor.commands.addCommand({
+name: 'evaluate',
+bindKey: {win: 'Ctrl-Return',  mac: 'Command-Return'},
+exec: function(editor) {
+$('#show-preview').click();
+},
+readOnly: true
+});
+};
+
+setEditorOptions(htmleditor,'html');
+setEditorOptions(jseditor,'javascript');
+setEditorOptions(csseditor,'css');
+
+$('#show-html').click(function(e){
+e.preventDefault();
+markActive(this);
+//$('#editor-html').show().siblings().hide();
+//$('#preview-container').hide();
+htmleditor.resize();
+htmleditor.focus();
+});
+
+$('#show-js').click(function(e){
+e.preventDefault();
+markActive(this);
+//$('#editor-js').show().siblings().hide();
+//$('#preview-container').hide();
+
+jseditor.resize();
+jseditor.focus();
+});
+
+$('#show-css').click(function(e){
+e.preventDefault();
+markActive(this);
+//$('#editor-css').show().siblings().hide();
+//$('#preview-container').hide();
+
+csseditor.resize();
+csseditor.focus();
+});
+
+$('#save-snippet').click(function(e){
+e.preventDefault();
+//var l = Ladda.create(this);
+//l.start();
+$.ajax({
+        type: 'PUT',
+        url:  "<%= j snippet_path(@snippet) %>",
+        data: { "snippet": { "html_code": htmleditor.getValue(),
+"css_code": csseditor.getValue() ,
+"js_code": jseditor.getValue(),
+"title" : $('input[name="title"]').val(),
+"bootstrap_version" : version
+}},
+        dataType: "JSON",
+        success: function(data) {
+            console.log(data);
+        }
+    })
+});
+
+$('#show-preview').click(function(e){
+e.preventDefault();
+markActive(this);
+
+$('.playground-editor').hide();
+
+var html = buildSource(htmleditor, jseditor, csseditor);
+var iframe = document.createElement('iframe');
+
+iframe.src = 'about:blank';
+iframe.frameBorder="0";
+iframe.height = 496;
+iframe.className = 'preview-iframe';
+
+$('.preview-iframe').remove();
+$('div#preview-container').append(iframe);
+
+iframe.contentWindow.document.open('text/html', 'replace');
+iframe.contentWindow.document.write(html);
+iframe.contentWindow.document.close();
+
+$('#preview-container').show();
+});
+
+function markActive(el)
+{
+$('#nav-widget .btn-group button').removeClass('active');
+$(el).addClass('active');
+}
+var cssurls = {};
+var jsurls = {};
+
+cssurls['3.3.0'] = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css';
+jsurls['3.3.0'] = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js';
+cssurls['3.2.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
+jsurls['3.2.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
+cssurls['3.1.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css';
+jsurls['3.1.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js';
+cssurls['3.0.3'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css';
+jsurls['3.0.3'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js';
+cssurls['3.0.1'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css';
+jsurls['3.0.1'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js';
+cssurls['3.0.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css';
+jsurls['3.0.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js';
+cssurls['2.3.2'] = '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css';
+jsurls['2.3.2'] = '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js';
+
+function buildSource(htmleditor, jseditor, csseditor)
+{
+var code = {};
+code.html = htmleditor.getValue();
+code.css = csseditor.getValue();
+code.js = jseditor.getValue();
+code.bootstrapcss = cssurls[version];
+code.bootstrapjs = jsurls[version];
+
+var template = "<!doctype html>\n\
+<html>\n\
+<head>\n\
+<meta charset='utf-8'>\n\
+<meta name='viewport' content='width=device-width, initial-scale=1'>\n\
+<title>Snippet - Bootsnipp.com</title>\n\
+<link href='|bootstrapcss|' rel='stylesheet'>\n\
+<style>|css|\x3C/style>\n\
+\x3Cscript type='text/javascript' src='//code.jquery.com/jquery-1.10.2.min.js'>\x3C/script>\n\
+\x3Cscript type='text/javascript' src='|bootstrapjs|'>\x3C/script>\n\
+\x3Cscript type='text/javascript'>|js|\x3C/script>\n\
+</head>\n\
+<body>\n\
+|html|\n\
+</body>\n\
+</html>";
+
+content = template.replace(/\|(\w+)\|/g, function(match, str)
+{
+if(str in code) return code[str];
+return '';
+});
+
+return content;
+}
+
+var submitsnippet   = $('#submitsnippet');
+var thankyou        = $('#thankyou');
+var errorlist       = $('#error-list');
+var hideable        = $('.hideable');
+thankyou.hide();
+submitsnippet.submit(function(e){
+e.preventDefault();
+if(snippetSaved){
+submitsnippet.spin();
+$.ajax({
+url: 'http://bootsnipp.com/api/snippets',
+type: 'POST',
+dataType: 'json',
+data: $('form#submitsnippet').serialize(),
+success: function(data) {
+submitsnippet.spin(false);
+hideable.fadeOut();
+thankyou.fadeIn('slow');
+},
+error: function (xhr, ajaxOptions, thrownError) {
+submitsnippet.spin(false);
+alert('Error submitting snippet, please try again!');
+}
+});
+} else {
+alert('Please save the snippet first');
+}
+return false;
+});
+})(jQuery);
+</script>

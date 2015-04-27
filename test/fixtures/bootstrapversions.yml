@@ -1,0 +1,21 @@
+# == Schema Information
+#
+# Table name: bootstrapversions
+#
+#  id             :integer          not null, primary key
+#  name           :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  css_assets_url :text
+#  js_assets_url  :text
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  url_name: MyText
+
+two:
+  name: MyString
+  url_name: MyText

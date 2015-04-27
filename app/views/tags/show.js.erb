@@ -1,0 +1,3 @@
+$(function() {
+	$("#insert-snippets").html("<%= escape_javascript render(partial: 'snippets/snippets_list', locals:{snippets: @snippets})%>");
+}); 

@@ -1,0 +1,19 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="page-header text-center">Tags</h1>
+
+
+<ul class="nav nav-pills nav-stacked tag-list">
+	<% @tags.each do |tag| %>
+		<li class="col-md-4 col-sm-6 col-xs-12 col-lg-3 ">
+			<%= link_to tag do %>
+			<span class="badge pull-right"><%= tag.snippets_count %></span>
+			<%= tag.name %>
+			<%end %>
+		</li>
+	<% end %>
+</ul>
+
+<%= link_to 'New Tag', new_tag_path, :class => "btn btn-success" %>

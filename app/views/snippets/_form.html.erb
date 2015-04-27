@@ -1,0 +1,104 @@
+<%= form_for(snippet) do |f| %>
+<% if snippet.errors.any? %>
+<div id="error_explanation">
+	<h2><%= pluralize(snippet.errors.count, "error") %> prohibited this snippet from being saved:</h2>
+
+	<ul>
+		<% snippet.errors.full_messages.each do |message| %>
+		<li>
+			<%= message %>
+		</li>
+		<% end %>
+	</ul>
+</div>
+<% end %>
+
+<div class="form-group">
+	<%= f.label :title %>
+	<br>
+	<%= f.text_area :title, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :slug %>
+	<br>
+	<%= f.text_area :slug, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :image_url %>
+	<br>
+	<%= f.text_area :image_url, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :original_url %>
+	<br>
+	<%= f.text_area :original_url, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :html_content %>
+	<br>
+	<%= f.text_area :html_content, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :html_code %>
+	<br>
+	<%= f.text_area :html_code, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :css_code %>
+	<br>
+	<%= f.text_area :css_code, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :js_code %>
+	<br>
+	<%= f.text_area :js_code, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :description %>
+	<br>
+	<%= f.text_area :description, :class => "form-control" %>
+</div>
+<div class="form-group">
+	<%= f.label :user_id %>
+	<br>
+	<%= f.text_field :user_id, :class => "form-control" %>
+</div>
+
+<div class="form-group">
+	<%= f.label :tags_list, "Tags associés" %>
+	<br>
+	<%= f.text_field :tags_list, class: "form-control", :id => "taginput" %>
+</div>
+<div class="actions text-center">
+	<% if snippet.new_record? %>
+	<%= f.submit "Create", :class => "btn btn-success btn-lg" %>
+	<% else %>
+	<%= f.submit "Update", :class => "btn btn-success btn-lg" %>
+	<% end %>
+</div>
+<% end %>
+
+<script>
+	$(function() {
+		
+		
+		$('.summernote').summernote({
+			height : 300, // set editor height
+			minHeight : null, // set minimum height of editor
+			maxHeight : null // set maximum height of editor
+		});
+
+		$('#taginput').tagsInput({
+			'autocomplete_url' : "/tags.json",
+			'height' : '100px',
+			'width' : '100%',
+			'interactive' : true,
+			'defaultText' : 'Ajouter un métier',
+			'removeWithBackspace' : true,
+			'minChars' : 0,
+			'maxChars' : 0, //if not provided there is no limit,
+			'placeholderColor' : '#666666'
+			// my parameters here
+		});
+	})
+</script>

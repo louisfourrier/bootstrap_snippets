@@ -1,0 +1,61 @@
+// Social colors
+$linkedin: #4393BB;
+$pinterest: #C92228;
+$twitter: #4099ff;
+$facebook: #3B5998;
+$google-plus: #db5a3c;
+
+// Nadvence color
+$nadvence: #28c3ab;
+
+@mixin color-transition($color) {
+  &:hover {
+    i{
+       color: $color;
+    }  
+  }
+}
+
+.color-nadvence{
+  color: $nadvence;
+}
+
+.linkedin-bg{
+    @include color-transition($linkedin);
+}
+.pinterest-bg{
+    @include color-transition($pinterest);
+}
+.twitter-bg{
+    @include color-transition($twitter);
+}
+.facebook-bg{
+    @include color-transition($facebook);
+}
+.google-plus-bg{
+    @include color-transition($google-plus);
+}
+
+.facebook-back{
+  background-color: $facebook;
+  &:hover {
+    background-color: $facebook;
+  }
+}
+.twitter-back{
+  background-color: $twitter;
+   &:hover {
+     background-color: $twitter;
+  }
+}
+.google-plus-back{
+  background-color: $google-plus;
+   &:hover {
+     background-color: $google-plus;
+  }
+}
+
+
+
+
+

@@ -1,0 +1,9 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="page-header text-center">New Snippet</h1>
+
+<%= render 'form', snippet: @snippet %>
+
+<%= link_to 'Back', snippets_path, :class => "btn btn-warning" %>

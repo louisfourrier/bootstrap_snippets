@@ -1,0 +1,10 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="page-header text-center">Editing Bootstrapversion</h1>
+
+<%= render 'form', bootstrapversion: @bootstrapversion %>
+
+<%= link_to 'Show', @bootstrapversion, :class => "btn btn-warning" %> |
+<%= link_to 'Back', bootstrapversions_path, :class => "btn btn-info" %>

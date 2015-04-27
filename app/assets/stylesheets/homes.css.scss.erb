@@ -1,0 +1,45 @@
+// Place all the styles related to the homes controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+@import 'colors';
+
+
+.no_underline{
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+/* change the path of icons for bootstrap */
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url(<%= asset_path 'glyphicons-halflings-regular.eot' %>);
+  src: url(<%= asset_path 'glyphicons-halflings-regular.eot?#iefix' %>) format('embedded-opentype'), 
+       url(<%= asset_path 'glyphicons-halflings-regular.woff' %>) format('woff'), 
+       url(<%= asset_path 'glyphicons-halflings-regular.ttf' %>) format('truetype'), 
+       url(<%= asset_path 'glyphicons-halflings-regular.svg#glyphicons_halflingsregular' %>) format('svg');
+}
+
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background-color:#F5F5F5;
+  //background-color:white;
+  height: 100%;
+  margin-bottom: 60px;
+}
+
+
+.main-container{
+  margin-top: 40px;
+  height: 100%;
+}

@@ -1,0 +1,38 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<div class="col-md-12">
+	<h1 class="page-header text-center">Snippets made by: <%= @user.id %></h1>
+</div>
+<div id="insert-snippets" class="col-md-12">
+	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets} %>
+</div>
+
+<div class="col-md-12">
+	<%= link_to 'Edit', edit_user_path(@user) %>
+    <%= link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' } %>
+</div>
+
+<div class="col-md-12">
+	<h2 class="text-center">Comments</h3> <div id="disqus_thread"></div>
+	<script type="text/javascript">
+		/* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = 'bootstrapsnippets';
+
+		/* * * DON'T EDIT BELOW THIS LINE * * */
+		(function() {
+			var dsq = document.createElement('script');
+			dsq.type = 'text/javascript';
+			dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+		})();
+	</script>
+	<noscript>
+		Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+	</noscript>
+</div>
+
+<%= link_to 'Edit', edit_user_path(@user), :class => "btn btn-warning"  %> |
+<%= link_to 'Back', users_path, :class => "btn btn-primary"  %>

@@ -1,0 +1,225 @@
+<% provide(:title, @snippet.title) %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<div class="row">
+	<div class="col-sm-3 col-md-2 sidebar">
+		<div class="text-center">
+			<img src="<%= @snippet.image_url %>" alt="<%= @snippet.title %>" class="img-responsive">
+		</div>
+
+		<hr />
+
+		<div class="btn-group btn-group-justified">
+			<div class="btn-group">
+				<button type="button" class="btn text-uppercase btn btn-success" >
+					<i class="fa fa-eye "></i> <%= @snippet.views_count %></span>
+				</button>
+			</div>
+			<div class="btn-group">
+				<button type="button" class="btn text-uppercase btn btn-primary" >
+					<i class="fa fa-star"></i> 67
+				</button>
+			</div>
+		</div>
+
+		<div class="text-center">
+			<div>
+				Tags
+			</div>
+			<% @tags.each do |tag|%>
+
+			<%= link_to tag do %><span class="label label-primary tag-label"><%= tag.name %></span><% end %>
+
+			<% end %>
+		</div>
+
+		<% if !@snippet.bootstrapversion.nil? %>
+		<div class="text-center">
+			<div class="text-center">
+				Bootstrap version
+			</div>
+			<%= link_to @snippet.bootstrapversion do %>
+			<span class="label label-info"><%= @snippet.bootstrapversion.name %></span>
+			<% end %>
+		</div>
+
+		<% end %>
+
+		<div>
+			Made by:
+			<i class="fa fa-user"></i>
+			<%= link_to @snippet.user.pseudo, @snippet.user %>
+		</div>
+
+		<div>
+			<%= link_to iframe_snippet_path(@snippet), class: "btn btn-default", target: "_blank" do  %>
+			<i class="fa fa-desktop"></i> Full screen
+			<% end %>
+		</div>
+
+		<div class="text-center">
+			<ul class="share-buttons">
+				<li>
+					<a href="https://www.facebook.com/sharer/sharer.php?u=&t=" target="_blank" title="Share on Facebook" class="color-facebook"><i class="fa fa-facebook-square fa-2x color-facebook"></i></a>
+				</li>
+				<li>
+					<a href="https://twitter.com/intent/tweet?source=&text=:%20" target="_blank" title="Tweet" class="color-twitter"><i class="fa fa-twitter-square fa-2x"></i></a>
+				</li>
+				<li>
+					<a href="https://plus.google.com/share?url=" target="_blank" title="Share on Google+" class="color-google-plus"><i class="fa fa-google-plus-square fa-2x"></i></a>
+				</li>
+				<li>
+					<a href="mailto:?subject=&body=:%20" target="_blank" title="Email" class="color-nadvence"><i class="fa fa-envelope fa-2x"></i></a>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+		<h1 class="page-header text-center"><%= @snippet.title %></h1>
+
+		<div class="col-sm-10 col-sm-offset-1 text-center">
+			<div id="nav-widget" class="btn-group btn-group-justified">
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#preview" aria-controls="preview" role="tab" data-toggle="tab">
+						<i class="fa fa-map-marker fa-2x"></i> Preview</span>
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#html-code" aria-controls="html-code" role="tab" data-toggle="tab">
+						<i class="fa fa-code fa-2x"></i> HTML
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#css-code" aria-controls="css-code" role="tab" data-toggle="tab">
+						<i class="fa fa-code fa-2x"></i> CSS
+					</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btn text-uppercase" href="#js-code" aria-controls="js-code" role="tab" data-toggle="tab">
+						<i class="fa fa-code fa-2x"></i> JS
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div role="tabpanel" class="col-sm-12">
+
+			<!-- Nav tabs -->
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="preview">
+
+					<div id="preview-container" >
+						<iframe id="snippet-preview" class="preview-iframe" height="496" src="<%= iframe_snippet_path(@snippet) %>"></iframe>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="html-code">
+
+					<div>
+
+						<div id="editor-html" class="ace-editor-class">
+							<%= @snippet.get_html_code%>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="css-code">
+					<div>
+
+						<div id="editor-css" class="ace-editor-class">
+							<%= @snippet.get_css_code%>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="js-code">
+					<div>
+
+						<div id="editor-js" class="ace-editor-class">
+							<%= @snippet.get_js_code%>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-md-12">
+
+			<h2 class="text-center">Similar snippets</h2>
+
+			<div class="row">
+				<%  @snippet.get_similar_snippets(4).each do |snippet| %>
+				<div class="col-sm-6 col-xs-12 col-md-4 col-lg-3">
+					<div class="thumbnail">
+						<div class="caption">
+							<%= link_to snippet do %>
+
+							<h4 class="text-center"><%= snippet.title%></h4>
+							<% end %>
+
+						</div>
+						<%= link_to snippet do %>
+						<img src="<%= snippet.image_url %>" alt="<%= snippet.title %>">
+						<% end %>
+						<div class="text-center">
+							<% snippet.tags.each do |tag| %>
+							<%= link_to tag do %><span class="label label-primary"><%= tag.name %></span><% end %>
+
+							<% end %>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			</div>
+		</div>
+
+		<div class="col-md-12">
+			<h2 class="text-center">Comments</h3> <div id="disqus_thread"></div>
+			<script type="text/javascript">
+				/* * * CONFIGURATION VARIABLES * * */
+				var disqus_shortname = 'bootstrapsnippets';
+
+				/* * * DON'T EDIT BELOW THIS LINE * * */
+				(function() {
+					var dsq = document.createElement('script');
+					dsq.type = 'text/javascript';
+					dsq.async = true;
+					dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+				})();
+			</script>
+			<noscript>
+				Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+			</noscript>
+		</div>
+	</div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+	$(function() {
+
+		var htmleditor = ace.edit("editor-html");
+		//var editor = ace.edit("testeditor");
+		var jseditor = ace.edit("editor-js");
+		var csseditor = ace.edit("editor-css");
+
+		function setEditorOptions(editor, type) {
+			editor.setTheme("ace/theme/clouds");
+			editor.setHighlightActiveLine(false);
+			editor.setReadOnly(true);
+			editor.getSession().setMode("ace/mode/" + type);
+		};
+
+		setEditorOptions(htmleditor, 'html');
+		setEditorOptions(jseditor, 'javascript');
+		setEditorOptions(csseditor, 'css');
+
+	})
+</script>
+

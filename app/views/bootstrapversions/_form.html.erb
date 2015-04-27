@@ -1,0 +1,29 @@
+<%= form_for(bootstrapversion) do |f| %>
+  <% if bootstrapversion.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(bootstrapversion.errors.count, "error") %> prohibited this bootstrapversion from being saved:</h2>
+
+      <ul>
+      <% bootstrapversion.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name %><br>
+    <%= f.text_field :name, :class => "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :url_name %><br>
+    <%= f.text_area :url_name, :class => "form-control" %>
+  </div>
+  <div class="actions text-center">
+  	<% if bootstrapversion.new_record? %>
+    <%= f.submit "Create", :class => "btn btn-success btn-lg" %>
+    <% else %>
+    <%= f.submit "Update", :class => "btn btn-success btn-lg" %>
+    <% end %>
+  </div>
+<% end %>

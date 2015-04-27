@@ -1,0 +1,9 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="page-header text-center">New User</h1>
+
+<%= render 'form', user: @user %>
+
+<%= link_to 'Back', users_path, :class => "btn btn-warning" %>

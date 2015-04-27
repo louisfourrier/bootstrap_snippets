@@ -1,0 +1,8 @@
+$(function() {
+	$("#insert-snippets").html("<%= escape_javascript render(partial: 'snippets_list', locals:{snippets: @snippets})%>");
+	$('.paginations a').click(function() {
+			$("#insert-snippets").html('<div class="text-center"><%= j image_tag "loading-glasses.gif"%></div>');
+			$.get(this.href, null, null, 'html');
+			return false;
+		});
+}); 

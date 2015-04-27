@@ -1,0 +1,22 @@
+<% provide(:title, "Profile of " + @user.pseudo) %>
+<% provide(:description, "Administration page of the user " + @user.pseudo ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<div class="col-md-12">
+	<h1 class="page-header text-center"><%= @user.pseudo %> profile (<%= @user.snippets.count%> snippets)</h1>
+</div>
+
+
+<div class="col-md-12 text-center">
+	<%= link_to edit_user_registration_path(@user), class: "btn btn-default" do  %>
+	<i class="fa fa-cog"></i> Configure your account
+	<% end %>
+	<%= link_to "New snippet", new_snippet_path, class: "btn btn-success"%>
+    <% link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+</div>
+
+
+<div id="insert-snippets" class="col-md-12">
+	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets, edit_mode: true} %>
+</div>
+

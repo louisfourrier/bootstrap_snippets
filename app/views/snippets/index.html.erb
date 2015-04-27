@@ -1,0 +1,40 @@
+<% provide(:title, "Bootstrap Snippets") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="text-center">Bootstrap Snippets of code</h1>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<input id="firstletters" type="text" name="firstletter" class="form-control search-input" autofocus="autofocus" placeholder="Search a snippet" value="<%= params[:starting_letter] %>" />
+	</div>
+</div>
+
+
+<div id="insert-snippets" class="col-md-12">
+	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets} %>
+</div>
+
+
+<%= link_to 'New Snippet', new_snippet_path, :class => "btn btn-success" %>
+
+<script>
+	$(function() {
+	var timeout;
+	$("#firstletters").on('input',function(e){
+	window.clearTimeout(timeout);
+	timeout = window.setTimeout(function(){
+		$("#insert-snippets").html('<div class="text-center"><%= j image_tag "loading-glasses.gif"%></div>');
+			var letters = $("#firstletters").val();
+			$.ajax({
+				url : "/snippets.js",
+				type : "GET",
+				dataType: "script",
+				data : {
+				starting_letter : letters
+				}
+			})
+	},500);
+	})
+	});
+</script>

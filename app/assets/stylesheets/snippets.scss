@@ -1,0 +1,70 @@
+// Place all the styles related to the Snippets controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.thumbnail{
+  padding-bottom: 10px;
+}
+
+.thumbnail:hover{
+  //border-color: grey;
+  -moz-box-shadow: 5px 5px 5px 0px #656565;
+-webkit-box-shadow: 5px 5px 5px 0px #656565;
+-o-box-shadow: 5px 5px 5px 0px #656565;
+box-shadow: 5px 5px 5px 0px #656565;
+}
+
+.snippet-item{
+  height: 365px;
+}
+
+#snippets-container{
+  margin-top: 10px;
+}
+
+ul.pagination{
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+
+
+/*-- Navigation Widget --*/
+#nav-widget {
+    border: 0px;
+    margin-bottom:10px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+#nav-widget .btn-group:not(:first-child) {
+    border-left: 1px solid #F5F0EC;
+}
+#nav-widget .btn{
+    background-color: #fff;
+    border: 0px;
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 3px solid #fff;
+}
+#nav-widget .btn:hover {
+    background-color: #F8F3F0;
+    color: #64584C;
+    border-bottom: 3px solid #55BC75;
+}
+
+#nav-widget .btn.active {
+    background-color: #F8F3F0;
+    color: #64584C;
+    border-bottom: 3px solid #55BC75;
+}
+
+#nav-widget  .btn{
+  color: rgb(44, 62, 80);
+}
+#nav-widget i.fa {
+    padding-right: 5px;
+}
+#nav-widget .badge {
+    font-size: .7em;
+    background-color: #E7663F;
+    margin-left:4px;
+    top: -10px;
+}

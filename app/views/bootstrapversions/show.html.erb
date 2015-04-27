@@ -1,0 +1,18 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="page-header text-center">Show instance <%= @bootstrapversion.id %></h1>
+
+<p>
+	<strong>Name:</strong>
+	<%= @bootstrapversion.name %>
+</p>
+
+<p>
+	<strong>Url name:</strong>
+	<%= @bootstrapversion.url_name %>
+</p>
+
+<%= link_to 'Edit', edit_bootstrapversion_path(@bootstrapversion), :class => "btn btn-warning"  %> |
+<%= link_to 'Back', bootstrapversions_path, :class => "btn btn-primary"  %>

@@ -1,0 +1,9 @@
+<% provide(:title, "TITLE") %>
+<% provide(:description, "Description" ) %>
+<% provide(:keywords, "keyword1, keyword2")%>
+
+<h1 class="page-header text-center">New Tag</h1>
+
+<%= render 'form', tag: @tag %>
+
+<%= link_to 'Back', tags_path, :class => "btn btn-warning" %>

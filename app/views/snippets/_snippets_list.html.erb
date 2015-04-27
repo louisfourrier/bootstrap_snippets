@@ -1,0 +1,71 @@
+<div class="text-center">
+	<%= will_paginate snippets, :params => { :controller => controller.controller_name, :action => controller.action_name, :format => :html}, renderer: BootstrapPagination::Rails%>
+</div>
+
+<% if local_assigns.has_key? :edit_mode && :edit_mode %>
+<div class="row" id="snippets-container">
+	<% snippets.each do |snippet| %>
+	<div class="col-sm-6 col-xs-12 col-md-4 col-lg-3 snippet-item">
+		<div class="thumbnail">
+			<div class="caption">
+				<%= link_to edit_snippet_path(snippet) do %>
+
+				<h4 class="text-center"><%= snippet.title%></h4>
+				<% end %>
+
+			</div>
+			<%= link_to edit_snippet_path(snippet) do %>
+			<img src="<%= snippet.image_url %>" alt="<%= snippet.title %>">
+			<% end %>
+			<div class="text-center">
+				<% snippet.tags.each do |tag| %>
+				<%= link_to tag do %><span class="label label-primary tag-label"><%= tag.name %></span><% end %>
+
+				<% end %>
+			</div>
+			
+			<div class="text-center">
+				<%= link_to 'Destroy', snippet, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm" %>
+			</div>
+		</div>
+	</div>
+	<% end %>
+</div>
+<% else %>
+<div class="row" id="snippets-container">
+	<% snippets.each do |snippet| %>
+	<div class="col-sm-6 col-xs-12 col-md-4 col-lg-3 snippet-item">
+		<div class="thumbnail">
+			<div class="caption">
+				<%= link_to snippet do %>
+
+				<h4 class="text-center"><%= snippet.title%></h4>
+				<% end %>
+
+			</div>
+			<%= link_to snippet do %>
+			<img src="<%= snippet.image_url %>" alt="<%= snippet.title %>">
+			<% end %>
+			<div class="text-center">
+				<% snippet.tags.each do |tag| %>
+				<%= link_to tag do %><span class="label label-primary tag-label"><%= tag.name %></span><% end %>
+
+				<% end %>
+			</div>
+		</div>
+	</div>
+	<% end %>
+</div>
+
+
+
+
+<% end %>
+<% if snippets.empty? %>
+<div class="alert alert-info text-center">
+	No snippets yet
+</div>
+<% end %>
+<div class="text-center">
+	<%= will_paginate snippets, :params => { :controller => controller.controller_name, :action => controller.action_name, :format => :html}, renderer: BootstrapPagination::Rails%>
+</div>
