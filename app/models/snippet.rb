@@ -103,7 +103,7 @@ class Snippet < ActiveRecord::Base
   def save_bootstrap_version
     if self.bootstrap_version.nil?
       bversion_id = Bootstrapversion.where('name = ?', "3.3.0").first.id
-      self.bootstrapversion_id = bversion.id
+      self.bootstrapversion_id = bversion_id
     elsif @bootstrap_version.present?
       bversion = Bootstrapversion.where('name = ?', @bootstrap_version).first || Bootstrapversion.where('name = ?', "3.3.0").first
       bversion_id = bversion.id
