@@ -45,14 +45,16 @@ class Snippet < ActiveRecord::Base
   ##-- Validations -----------------
   # validates :email, presence: true
   # validates :username, uniqueness: { case_sensitive: false }
+  # validates_uniqueness_of :acronym, :allow_blank => true, :scope => [:group_id], :case_sensitive => false
   validates :title, presence: true
+  validates :original_url, uniqueness: true, :allow_blank => true, :scope => [:is_scraped]
   #validates :original_url, presence: true
   #validates :original_url, uniqueness: true
 
   ##-- Callbacks -------------------
   after_save :update_research_name
   after_create :generate_random_token
-  before_update :save_bootstrap_version
+  before_update  :save_bootstrap_version
 
   ##-- Associations ----------------
   # has_many :roles, dependent: :destroy
