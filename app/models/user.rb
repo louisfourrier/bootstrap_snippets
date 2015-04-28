@@ -54,12 +54,12 @@ class User < ActiveRecord::Base
   # scope :active, -> { where(active: true) }
 
   ##-- Methods ---------------------
- 
-  
   
   # Find the admin and updates the status
   def self.define_administrator
     admin = self.find_by(:email => "louis.fourrier@gmail.com")
     admin.update(:is_administrator => true)
   end
+  
+  
 end

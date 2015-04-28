@@ -45,6 +45,8 @@ gem 'exception_notification'
 # For sitemap generation
 gem 'sitemap_generator'
 
+gem 'newrelic_rpm'
+
 gem 'devise'
 
 ## APPLICATION GEMS

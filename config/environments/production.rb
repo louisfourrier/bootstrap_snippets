@@ -105,8 +105,8 @@ Rails.application.configure do
   # Change the address of emails of the notifications of errors
   config.middleware.use ExceptionNotification::Rack,
   :email => {
-    :email_prefix => "Nadvence Exceptions Notification",
-    :sender_address => %{"Nadvence Server" <admin@rebble.it>},
+    :email_prefix => "Bootstrap Snippets Notifications",
+    :sender_address => %{"Bootstrap Snippets Server" <admin@rebble.it>},
     :exception_recipients => %w{admin@rebble.it}
   }
 
