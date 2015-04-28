@@ -24,7 +24,7 @@ class Tag < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :name, length: { in: 2..30 } 
   
-  before_save :sanitize_name
+  before_validation :sanitize_name
   
   after_create :update_research_name
   after_create :update_first_letter
@@ -34,9 +34,21 @@ class Tag < ActiveRecord::Base
   
   # Basic sanitize
   def sanitize_name
-    self.name = self.name.strip.downcase
+    self.name = Tag.sanitize_name(self.name)
+  end
+  
+  # Class method to sanitier the name
+  # TODO Problem is to check the name before create
+  def self.sanitize_name(name)
+    return name.to_s.strip.downcase
+  end
+  
+  # Method for researrch name in common methods
+  def title 
+    self.name
   end 
   
+  # Distinguish tags from the bootstrap version of the snippets
   def update_bootstrap_version
     names = Bootstrapversion.name_list
     if names.include?(self.name)

@@ -28,7 +28,6 @@
 #  comment_for_refusal :text
 #  is_analysed         :boolean          default(FALSE)
 #
-
 class Snippet < ActiveRecord::Base
   ##-- Requirements and Concerns ---
   include CommonMethods
@@ -48,7 +47,7 @@ class Snippet < ActiveRecord::Base
   # validates_uniqueness_of :acronym, :allow_blank => true, :scope => [:group_id], :case_sensitive => false
   validates :title, presence: true
   validates :original_url, uniqueness: { :allow_blank => true, :scope => [:is_scraped] }
-  
+
   #validates :original_url, presence: true
   #validates :original_url, uniqueness: true
 
@@ -83,34 +82,34 @@ class Snippet < ActiveRecord::Base
   def self.create_fork_new(snippet, user)
 
   end
-  
+
   # Find the snippets that share the tags of the snippet
   def get_similar_snippets(number)
     return self.similar_snippets.order('RANDOM()').first(number.to_i)
   end
-  
+
   def bootstrap_version
     if @bootstrap_version
-      return @bootstrap_version
+    return @bootstrap_version
     elsif self.bootstrapversion
-      return self.bootstrapversion.name
+    return self.bootstrapversion.name
     else
       return nil
     end
   end
-  
+
   # Save the bootstrap version given by the virtual attribute bootstrap_version
   def save_bootstrap_version
     if self.bootstrap_version.nil?
       bversion_id = Bootstrapversion.where('name = ?', "3.3.0").first.id
-      self.bootstrapversion_id = bversion_id
+    self.bootstrapversion_id = bversion_id
     elsif @bootstrap_version.present?
       bversion = Bootstrapversion.where('name = ?', @bootstrap_version).first || Bootstrapversion.where('name = ?', "3.3.0").first
-      bversion_id = bversion.id
-      self.bootstrapversion_id = bversion.id
+    bversion_id = bversion.id
+    self.bootstrapversion_id = bversion.id
     end
   end
-  
+
   ### FOR PARSING ###
 
   # Convert the content in Nokogiri Nodes
@@ -172,29 +171,28 @@ class Snippet < ActiveRecord::Base
   def get_raw_html_code
     code = self.snippet_preview.css('body').first.to_s
   end
-  
+
   # Find the URL of the Iframe to have a clear Iframe Html Content
   def update_original_iframe_url
     begin
-    iframe_url = self.html_content_to_html.css('iframe').first['src'].to_s
-    self.update(:iframe_url_original => iframe_url)
+      iframe_url = self.html_content_to_html.css('iframe').first['src'].to_s
+      self.update(:iframe_url_original => iframe_url)
     rescue
       puts "error in the update"
     end
   end
-  
+
   def update_number_views
     begin
-    text = self.html_content_to_html.css('#action-bar > a.btn.btn-default.disabled').text
-    nb = text.strip.split(' ').first.gsub!('K', '').to_s.to_f
-    nb = nb * 1000
-    self.update_column(:views_count, nb.to_i)
+      text = self.html_content_to_html.css('#action-bar > a.btn.btn-default.disabled').text
+      nb = text.strip.split(' ').first.gsub!('K', '').to_s.to_f
+      nb = nb * 1000
+      self.update_column(:views_count, nb.to_i)
     rescue
       puts "Error while updating the number of views"
     end
   end
 
-  
   # Get the tags in the main page of the snippet
   def get_tags
     html = self.html_content_to_html
@@ -206,8 +204,13 @@ class Snippet < ActiveRecord::Base
     end
 
     array.each do |t|
-      tag = Tag.find_or_create_by(name: t.to_s)
-      self.tags << tag
+      sanitize_name = Tag.sanitize_name(t.to_s)
+      tag = Tag.find_or_create_by(name: sanitize_name)
+      begin
+        self.tags << tag
+      rescue
+        puts "Already taken"
+      end
     end
   end
 
@@ -243,8 +246,7 @@ class Snippet < ActiveRecord::Base
       end
     end
   end
-  
-  
+
   # Global operations after a crawl to update the correct fields
   def global_update_crawler
     self.update_original_iframe_url
@@ -257,7 +259,6 @@ class Snippet < ActiveRecord::Base
     self.update_number_views
     self.update_column(:is_analysed => true)
   end
-
 
   private
 
