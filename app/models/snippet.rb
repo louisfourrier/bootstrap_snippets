@@ -257,8 +257,10 @@ class Snippet < ActiveRecord::Base
     self.update_username
     self.get_bootstrap_version
     self.update_number_views
-    self.update_column(:is_analysed => true)
+    self.update_column(:is_analysed, true)
   end
+  
+  # Snippet.class_method('global_update_crawler')
 
   private
 
