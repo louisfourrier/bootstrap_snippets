@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_filter :configure_permitted_parameters, if: :devise_controller?
   helper_method :is_administrator 
   
+  # Filter action to permits only administrator to access part of the application
   def is_administrator?
     if current_user.nil?
       redirect_to new_user_session_path, notice: 'You must be log in to perform this action'
@@ -14,6 +15,7 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # Method to know if current user is administrator
   def is_administrator
     if current_user && current_user.is_administrator
       return true

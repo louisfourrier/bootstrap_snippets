@@ -11,12 +11,19 @@
 	<%= link_to edit_user_registration_path(@user), class: "btn btn-default" do  %>
 	<i class="fa fa-cog"></i> Configure your account
 	<% end %>
-	<%= link_to "New snippet", new_snippet_path, class: "btn btn-success"%>
+	<%= link_to new_snippet_path, class: "btn btn-info" do%>
+	<i class="fa fa-plus"></i> New Snippet
+	<% end%>
     <% link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
 </div>
 
 
 <div id="insert-snippets" class="col-md-12">
 	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets, edit_mode: true} %>
+</div>
+
+<div class="col-md-12">
+	<h3 class="text-center">Favorites</h3>
+	<%= render partial: "snippets/snippets_list", locals: {snippets: @favorite_snippets} %>
 </div>
 

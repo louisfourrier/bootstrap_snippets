@@ -1,0 +1,15 @@
+// Partial for alert message in javascript.
+
+$(function () {
+<% if local_assigns.has_key? :color_class %>
+<% if color_class == "success"%>
+toastr.success('<%= message %>');
+<% elsif color_class == "error"%>
+toastr.error('<%= message %>');
+<% else%>
+toastr.warning('<%= message %>');
+<% end %>
+<% else %>
+toastr.warning('<%= message %>');
+<% end %>
+});

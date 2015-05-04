@@ -44,10 +44,14 @@ gem 'friendly_id', '>= 5.0.0'
 gem 'exception_notification'
 # For sitemap generation
 gem 'sitemap_generator'
+# For in place editing of input
+gem 'best_in_place'
 
 gem 'newrelic_rpm'
 
 gem 'devise'
+
+gem 'imgkit'
 
 ## APPLICATION GEMS
 ## FOR PARSING

@@ -1,28 +1,22 @@
 class BootstrapversionsController < ApplicationController
+  before_action :is_administrator?, except: [:index, :show]
   before_action :set_bootstrapversion, only: [:show, :edit, :update, :destroy]
-  before_filter :is_administrator?
-  # GET /bootstrapversions
-  # GET /bootstrapversions.json
+  
   def index
     @bootstrapversions = Bootstrapversion.all
   end
 
-  # GET /bootstrapversions/1
-  # GET /bootstrapversions/1.json
   def show
+    @snippets = @bootstrapversion.snippets.approved.paginate(:page => params[:page], :per_page => 20)
   end
 
-  # GET /bootstrapversions/new
   def new
     @bootstrapversion = Bootstrapversion.new
   end
 
-  # GET /bootstrapversions/1/edit
   def edit
   end
 
-  # POST /bootstrapversions
-  # POST /bootstrapversions.json
   def create
     @bootstrapversion = Bootstrapversion.new(bootstrapversion_params)
 

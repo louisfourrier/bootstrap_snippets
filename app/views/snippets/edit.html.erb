@@ -3,28 +3,65 @@
 <% provide(:keywords, "create snippets, bootstrap, html snippets, css code, javascript, developers")%>
 
 <div class="row">
-	
+
 	<div class="col-sm-3 col-md-2 sidebar">
-		<h3 class="text-center">Options</h3>
+		<h4 class="text-center">Bootstrap</h4>
 		<div class="col-md-12">
 			<%= select('snippet', 'bootstrap_version', Bootstrapversion.all.collect {|b| [ b.bootstrap_name, b.name ] }, {include_blank: 'None', selected: @snippet.bootstrapversion.name}, class: "form-control")%>
-			
-			
+
+		</div>
+		
+		
+		<%= form_for(@snippet) do |f| %>
+		<div class="form-group">
+			<h4 class="text-center">Tags</h4>
+			<%= f.text_field :tags_list, class: "form-control", :id => "taginput" %>
+		</div>
+		<% end %>
+
+		<h3 class="text-center">Actions</h3>
+
+		<div class="col-md-12 text-center">
+			<div class="btn-group-vertical" role="group" aria-label="..." >
+
+				<a href="#" type="button" id="save-snippet" class="btn btn-primary align-left" style="text-align: left;"><i class="fa fa-floppy-o"></i> Save snippet</a>
+				<%= link_to iframe_snippet_path(@snippet), class: "btn btn-default align-left", style:"text-align: left;", type: "button", target: "_blank" do %>
+				<i class="fa fa-desktop"></i> Full Screen
+				<% end %>
+				<%= link_to @snippet, class: "btn btn-warning", type: "button", target: "_blank" do  %>
+				<i class="fa fa-eye"></i> See Snippet</span>
+				<% end %>
+				
+				
+				<%= link_to fork_snippet_snippet_path(@snippet), class: "btn btn-info", type: "button" do  %>
+				<i class="fa fa-retweet"></i> Fork Snippet</span>
+				<% end %>
+				<%= link_to  @snippet, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger", style:"text-align: left;", type: "button" do %>
+				<i class="fa fa-trash"></i> Destroy
+				<% end %>
+			</div>
+		</div>
+		
+		
+
+		<div class="col-md-12  well">
+			<b>Status</b>: <%= @snippet.human_status%>
 		</div>
 
-		<hr />
+		<% if @snippet.need_waiting? %>
+		<div class="col-md-12 text-center">
 
-		<div class="col-md-12">
-			<a href="#" id="save-snippet" class="btn btn-primary ladda-button" data-style="expand-right">Save snippet</a>
-			<%= link_to "Full Screen", iframe_snippet_path(@snippet), class: "btn btn-default"%>
-			<%= link_to 'Destroy', @snippet, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+			<%= link_to user_status_snippet_path(@snippet, :status => 1), remote: true, class: "btn btn-info" do %>
+			<i class="fa fa-time"></i> Send for approval
+			<% end %>
+
 		</div>
-
+		<% end %>
 	</div>
 
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	
-		<h1 class="page-header text-center" id="snippet-name"><%= @snippet.title%></h1>
+
+		<h1 class="page-header text-center tooltip-tag" title="Click to modify the title of the Snippet" id="snippet-name"><%= best_in_place @snippet, :title %></h1>
 
 		<div class="col-sm-10 col-sm-offset-1 text-center">
 			<div id="nav-widget" class="btn-group btn-group-justified">
@@ -79,7 +116,6 @@
 				</div>
 				<div role="tabpanel" class="tab-pane" id="js-code">
 					<div>
-
 						<div id="editor-js" class="ace-editor-class"><%= @snippet.js_code%></div>
 					</div>
 
@@ -87,218 +123,226 @@
 			</div>
 
 		</div>
-		
+
 		<div class="col-md-12">
 			<hr />
-			<div class="alert alert-warning"><i class="fa fa-warning"></i> If you want to provide information about how to use or customize your snippet, integrate it in the HTML code to display it on the preview</div>
+			<div class="alert alert-warning">
+				<i class="fa fa-warning"></i> If you want to provide information about how to use or customize your snippet, integrate it in the HTML code to display it on the preview
+			</div>
 		</div>
 
 	</div>
-	
-</div>
 
+</div>
+<!-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
+<-->
+
+
 
 <script>
-(function($) {
-var snippetSaved = false;
-var htmleditor = ace.edit("editor-html");
-var jseditor = ace.edit("editor-js");
-var csseditor = ace.edit("editor-css");
-var version = '3.3.0';
-var snippetTitle = $('#snippet-name');
+		(function($) {
 
-// If it changes the bootstrap version come back to the preview
-$('select[name="snippet[bootstrap_version]"]').change(function(e){
-version = $(this).val();
-$('#show-preview').click();
-});
+	$('.best_in_place').best_in_place();
+	var snippetSaved = false;
+	var htmleditor = ace.edit("editor-html");
+	var jseditor = ace.edit("editor-js");
+	var csseditor = ace.edit("editor-css");
+	var version = '3.3.0';
+	var snippetTitle = $('#snippet-name');
 
-function setEditorOptions(editor, type){
-editor.setTheme("ace/theme/clouds");
-editor.setHighlightActiveLine(false);
-editor.getSession().setMode("ace/mode/"+type);
-editor.commands.addCommand({
-name: 'save',
-bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-exec: function(editor) {
-$('#save-snippet').click();
-},
-readOnly: false
-});
-editor.commands.addCommand({
-name: 'evaluate',
-bindKey: {win: 'Ctrl-Return',  mac: 'Command-Return'},
-exec: function(editor) {
-$('#show-preview').click();
-},
-readOnly: true
-});
-};
+	// If it changes the bootstrap version come back to the preview
+	$('select[name="snippet[bootstrap_version]"]').change(function(e){
+	version = $(this).val();
+	$('#show-preview').click();
+	});
 
-setEditorOptions(htmleditor,'html');
-setEditorOptions(jseditor,'javascript');
-setEditorOptions(csseditor,'css');
+	function setEditorOptions(editor, type){
+	editor.setTheme("ace/theme/clouds");
+	editor.setHighlightActiveLine(false);
+	editor.getSession().setMode("ace/mode/"+type);
+	editor.commands.addCommand({
+	name: 'save',
+	bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+	exec: function(editor) {
+	$('#save-snippet').click();
+	},
+	readOnly: false
+	});
+	editor.commands.addCommand({
+	name: 'evaluate',
+	bindKey: {win: 'Ctrl-Return',  mac: 'Command-Return'},
+	exec: function(editor) {
+	$('#show-preview').click();
+	},
+	readOnly: true
+	});
+	};
 
-$('#show-html').click(function(e){
-e.preventDefault();
-markActive(this);
-//$('#editor-html').show().siblings().hide();
-//$('#preview-container').hide();
-htmleditor.resize();
-htmleditor.focus();
-});
+	setEditorOptions(htmleditor,'html');
+	setEditorOptions(jseditor,'javascript');
+	setEditorOptions(csseditor,'css');
 
-$('#show-js').click(function(e){
-e.preventDefault();
-markActive(this);
-//$('#editor-js').show().siblings().hide();
-//$('#preview-container').hide();
+	$('#show-html').click(function(e){
+	e.preventDefault();
+	markActive(this);
+	//$('#editor-html').show().siblings().hide();
+	//$('#preview-container').hide();
+	htmleditor.resize();
+	htmleditor.focus();
+	});
 
-jseditor.resize();
-jseditor.focus();
-});
+	$('#show-js').click(function(e){
+	e.preventDefault();
+	markActive(this);
+	//$('#editor-js').show().siblings().hide();
+	//$('#preview-container').hide();
 
-$('#show-css').click(function(e){
-e.preventDefault();
-markActive(this);
-//$('#editor-css').show().siblings().hide();
-//$('#preview-container').hide();
+	jseditor.resize();
+	jseditor.focus();
+	});
 
-csseditor.resize();
-csseditor.focus();
-});
+	$('#show-css').click(function(e){
+	e.preventDefault();
+	markActive(this);
+	//$('#editor-css').show().siblings().hide();
+	//$('#preview-container').hide();
 
-$('#save-snippet').click(function(e){
-e.preventDefault();
-//var l = Ladda.create(this);
-//l.start();
-$.ajax({
-        type: 'PUT',
-        url:  "<%= j snippet_path(@snippet) %>",
-        data: { "snippet": { "html_code": htmleditor.getValue(),
-"css_code": csseditor.getValue() ,
-"js_code": jseditor.getValue(),
-"title" : $('input[name="title"]').val(),
-"bootstrap_version" : version
-}},
-        dataType: "JSON",
-        success: function(data) {
-            console.log(data);
-        }
-    })
-});
+	csseditor.resize();
+	csseditor.focus();
+	});
 
-$('#show-preview').click(function(e){
-e.preventDefault();
-markActive(this);
+	$('#save-snippet').click(function(e){
+	e.preventDefault();
+	//var l = Ladda.create(this);
+	//l.start();
+	$.ajax({
+	type: 'PUT',
+	url:  "<%= j snippet_path(@snippet) %>",
+		data: { "snippet": { "html_code": htmleditor.getValue(),
+		"css_code": csseditor.getValue(),
+		"js_code": jseditor.getValue(),
+		"tags_list": $('#taginput').val(),
+		"title" : $('input[name="title"]').val(),
+		"bootstrap_version" : version
+		}},
+		dataType: "script",
+		success: function(data) {
+		//console.log(data);
+		}
+		})
+		});
 
-$('.playground-editor').hide();
+		$('#show-preview').click(function(e){
+		e.preventDefault();
+		markActive(this);
 
-var html = buildSource(htmleditor, jseditor, csseditor);
-var iframe = document.createElement('iframe');
+		$('.playground-editor').hide();
 
-iframe.src = 'about:blank';
-iframe.frameBorder="0";
-iframe.height = 496;
-iframe.className = 'preview-iframe';
+		var html = buildSource(htmleditor, jseditor, csseditor);
+		var iframe = document.createElement('iframe');
 
-$('.preview-iframe').remove();
-$('div#preview-container').append(iframe);
+		iframe.src = 'about:blank';
+		iframe.frameBorder="0";
+		iframe.height = 496;
+		iframe.className = 'preview-iframe';
 
-iframe.contentWindow.document.open('text/html', 'replace');
-iframe.contentWindow.document.write(html);
-iframe.contentWindow.document.close();
+		$('.preview-iframe').remove();
+		$('div#preview-container').append(iframe);
 
-$('#preview-container').show();
-});
+		iframe.contentWindow.document.open('text/html', 'replace');
+		iframe.contentWindow.document.write(html);
+		iframe.contentWindow.document.close();
 
-function markActive(el)
-{
-$('#nav-widget .btn-group button').removeClass('active');
-$(el).addClass('active');
-}
-var cssurls = {};
-var jsurls = {};
+		$('#preview-container').show();
+		});
 
-cssurls['3.3.0'] = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css';
-jsurls['3.3.0'] = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js';
-cssurls['3.2.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
-jsurls['3.2.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
-cssurls['3.1.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css';
-jsurls['3.1.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js';
-cssurls['3.0.3'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css';
-jsurls['3.0.3'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js';
-cssurls['3.0.1'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css';
-jsurls['3.0.1'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js';
-cssurls['3.0.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css';
-jsurls['3.0.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js';
-cssurls['2.3.2'] = '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css';
-jsurls['2.3.2'] = '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js';
+		function markActive(el)
+		{
+		$('#nav-widget .btn-group button').removeClass('active');
+		$(el).addClass('active');
+		}
+		var cssurls = {};
+		var jsurls = {};
 
-function buildSource(htmleditor, jseditor, csseditor)
-{
-var code = {};
-code.html = htmleditor.getValue();
-code.css = csseditor.getValue();
-code.js = jseditor.getValue();
-code.bootstrapcss = cssurls[version];
-code.bootstrapjs = jsurls[version];
+		cssurls['3.3.0'] = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css';
+		jsurls['3.3.0'] = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js';
+		cssurls['3.2.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
+		jsurls['3.2.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
+		cssurls['3.1.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css';
+		jsurls['3.1.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js';
+		cssurls['3.0.3'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css';
+		jsurls['3.0.3'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js';
+		cssurls['3.0.1'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css';
+		jsurls['3.0.1'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js';
+		cssurls['3.0.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css';
+		jsurls['3.0.0'] = '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js';
+		cssurls['2.3.2'] = '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css';
+		jsurls['2.3.2'] = '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js';
 
-var template = "<!doctype html>\n\
-<html>\n\
-<head>\n\
-<meta charset='utf-8'>\n\
-<meta name='viewport' content='width=device-width, initial-scale=1'>\n\
-<title>Snippet - Bootsnipp.com</title>\n\
-<link href='|bootstrapcss|' rel='stylesheet'>\n\
-<style>|css|\x3C/style>\n\
-\x3Cscript type='text/javascript' src='//code.jquery.com/jquery-1.10.2.min.js'>\x3C/script>\n\
-\x3Cscript type='text/javascript' src='|bootstrapjs|'>\x3C/script>\n\
-\x3Cscript type='text/javascript'>|js|\x3C/script>\n\
-</head>\n\
-<body>\n\
-|html|\n\
-</body>\n\
-</html>";
+		function buildSource(htmleditor, jseditor, csseditor)
+		{
+		var code = {};
+		code.html = htmleditor.getValue();
+		code.css = csseditor.getValue();
+		code.js = jseditor.getValue();
+		code.bootstrapcss = cssurls[version];
+		code.bootstrapjs = jsurls[version];
 
-content = template.replace(/\|(\w+)\|/g, function(match, str)
-{
-if(str in code) return code[str];
-return '';
-});
+		var template = "<!doctype html>\n\
+		<html>\n\
+		<head>\n\
+		<meta charset='utf-8'>\n\
+		<meta name='viewport' content='width=device-width, initial-scale=1'>\n\
+		<title>Snippet - Bootsnipp.com</title>\n\
+		<link href='|bootstrapcss|' rel='stylesheet'>\n\
+		<style>|css|\x3C/style>\n\
+		\x3Cscript type='text/javascript' src='//code.jquery.com/jquery-1.10.2.min.js'>\x3C/script>\n\
+		\x3Cscript type='text/javascript' src='|bootstrapjs|'>\x3C/script>\n\
+		\x3Cscript type='text/javascript'>|js|\x3C/script>\n\
+		</head>\n\
+		<body>\n\
+		|html|\n\
+		</body>\n\
+		</html>";
 
-return content;
-}
+		content = template.replace(/\|(\w+)\|/g, function(match, str)
+		{
+		if(str in code) return code[str];
+		return '';
+		});
 
-var submitsnippet   = $('#submitsnippet');
-var thankyou        = $('#thankyou');
-var errorlist       = $('#error-list');
-var hideable        = $('.hideable');
-thankyou.hide();
-submitsnippet.submit(function(e){
-e.preventDefault();
-if(snippetSaved){
-submitsnippet.spin();
-$.ajax({
-url: 'http://bootsnipp.com/api/snippets',
-type: 'POST',
-dataType: 'json',
-data: $('form#submitsnippet').serialize(),
-success: function(data) {
-submitsnippet.spin(false);
-hideable.fadeOut();
-thankyou.fadeIn('slow');
-},
-error: function (xhr, ajaxOptions, thrownError) {
-submitsnippet.spin(false);
-alert('Error submitting snippet, please try again!');
-}
-});
-} else {
-alert('Please save the snippet first');
-}
-return false;
-});
-})(jQuery);
+		return content;
+		}
+
+		var submitsnippet   = $('#submitsnippet');
+		var thankyou        = $('#thankyou');
+		var errorlist       = $('#error-list');
+		var hideable        = $('.hideable');
+		thankyou.hide();
+		submitsnippet.submit(function(e){
+		e.preventDefault();
+		if(snippetSaved){
+		submitsnippet.spin();
+		$.ajax({
+		url: 'http://bootsnipp.com/api/snippets',
+		type: 'POST',
+		dataType: 'json',
+		data: $('form#submitsnippet').serialize(),
+		success: function(data) {
+		submitsnippet.spin(false);
+		hideable.fadeOut();
+		thankyou.fadeIn('slow');
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		submitsnippet.spin(false);
+		alert('Error submitting snippet, please try again!');
+		}
+		});
+		} else {
+		alert('Please save the snippet first');
+		}
+		return false;
+		});
+		})(jQuery);
 </script>

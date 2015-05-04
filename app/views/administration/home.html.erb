@@ -1,0 +1,12 @@
+<% provide(:title, "Administration - Dashboard") %>
+<% provide(:description, "Snippets waiting to be approved to be public") %>
+<% provide(:keywords, "snippets, css, js , html, Bootstrap, codes")%>
+
+
+<h1 class="page-header text-center">Administration Dashboard</h1>
+
+<div class="col-md-12">
+	<%= link_to "User Management", users_path, class: "btn btn-info"%>
+	<%= link_to "BootstrapVersion Management", bootstrapversions_path, class: "btn btn-info"%>
+	<%= link_to "Waiting Snippets", administration_waiting_snippets_path, class: "btn btn-info"%>
+</div>

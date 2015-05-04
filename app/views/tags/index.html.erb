@@ -1,8 +1,8 @@
-<% provide(:title, "TITLE") %>
-<% provide(:description, "Description" ) %>
-<% provide(:keywords, "keyword1, keyword2")%>
+<% provide(:title, "Boostrap Snippets by Tags") %>
+<% provide(:description, "All the tags associated with Bootstrap snippets of code" ) %>
+<% provide(:keywords, "tags, Snippets of code, HTML, JS, CSS, Snippets, Bootstrap, Developers, Development")%>
 
-<h1 class="page-header text-center">Tags</h1>
+<h1 class="page-header text-center">Snippets by Tags <small> Select a Tag</small></h1>
 
 
 <ul class="nav nav-pills nav-stacked tag-list">
@@ -15,5 +15,6 @@
 		</li>
 	<% end %>
 </ul>
-
+<% if is_administrator %>
 <%= link_to 'New Tag', new_tag_path, :class => "btn btn-success" %>
+<% end %>

@@ -14,5 +14,8 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require ace-editor
+//= require best_in_place
+//= require bootstrap-tagsinput
+//= require ace-internet
 //= require_tree ../../../vendor/assets/javascripts/plugins
 //= require_tree .

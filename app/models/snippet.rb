@@ -27,6 +27,7 @@
 #  send_for_approval   :boolean          default(FALSE)
 #  comment_for_refusal :text
 #  is_analysed         :boolean          default(FALSE)
+#  status              :integer          default(0)
 #
 class Snippet < ActiveRecord::Base
   ##-- Requirements and Concerns ---
@@ -62,8 +63,14 @@ class Snippet < ActiveRecord::Base
   belongs_to :user
   belongs_to :bootstrapversion
   has_many :similar_snippets, through: :tags, :class_name => "Snippet", :source => :snippets
+
+  has_many :favorites
+  has_many :fans, through: :favorites, :class_name => "User", :source => :user
   ##-- Scopes ----------------------
-  # scope :active, -> { where(active: true) }
+  scope :approved, -> { where(status: 2) }
+  scope :not_approved, -> { where(status: 2).not }
+  scope :waiting, -> { where(status: 1) }
+  
   ##-- Methods ---------------------
   # Easy method for pretty URLS
   def to_param
@@ -78,14 +85,100 @@ class Snippet < ActiveRecord::Base
     return snippet
   end
 
-  #TODO Method to create a new snippet from a fork
-  def self.create_fork_new(snippet, user)
-
+  # Method to create a new snippet from a fork
+  def create_fork_new(user)
+    new_snippet = user.snippets.build(:title => "Fork of : " + self.title.to_s, :html_code => self.html_code, :css_code => self.css_code, :js_code => self.js_code, :bootstrapversion_id => self.bootstrapversion.id)
+    new_snippet.save
+    self.tags.each do |t|
+      new_snippet.tags << t
+    end
+    return new_snippet
   end
+
+  # Puts the snippet in the favorite of the user
+  def favorite_from(user)
+    if user.favorite_snippets.find_by(:id => self.id)
+      self.fans.destroy(user)
+      return "Snippet removed from your favorites"
+    else
+      self.fans << user
+      return "Snippet now in favorites"
+    end
+  end
+
+  def is_favorite(user)
+    return !user.favorite_snippets.find_by(:id => self.id).nil?
+  end
+
+  # Defavorite the snippet from the user
+  def defavorite_from(user)
+    if user.favorite_snippets.find_by(:id => self.id)
+      user.favorite_snippets.destroy(self)
+      return "Snippet correctly removed from favorites"
+    else
+      return "Snippet not in favorites"
+    end
+  end
+
+  ## STATUS RELATED METHODS
+  # Status 0 nothing, 1 Waiting, 2 Approved, 3 Refused
+
+  # Method that permits for the administrator to change the status of the snippet
+  def admin_status_update(status)
+    status = status.to_i
+    if status == 2
+      self.update_column(:status, 2)
+      return "Accepted"
+    elsif status == 3
+      self.update_column(:status, 3)
+      return "Refused"
+    elsif status == 1
+      self.update_column(:status, 1)
+      return "Waiting"
+    end
+  end
+
+  # Puts the snippet in the waiting
+  def user_status_update(status)
+    status = status.to_i
+    if status == 0
+      self.update_column(:status, 0)
+      return "Hidden"
+    elsif status == 1
+      self.update_column(:status, 1)
+      return "Waiting for approval"
+    end
+  end
+
+  def human_status
+    case self.status.to_i
+    when 0
+      return "Snippet Hidden"
+    when 1
+      return "Snippet Waiting for approval"
+    when 2
+      return "Snippet Approved"
+    when 3
+      return "Snippet Refused by administrators"
+    else
+    return "Unknown Status"
+    end
+  end
+
+  # If the snippet needs to display a put in waiting area ?
+  def need_waiting?
+    if self.status == 0 || self.status == 3
+    return true
+    else
+    return false
+    end
+  end
+
+  ## END OF STATUS METHODS
 
   # Find the snippets that share the tags of the snippet
   def get_similar_snippets(number)
-    return self.similar_snippets.order('RANDOM()').first(number.to_i)
+    return self.similar_snippets.approved.order('RANDOM()').first(number.to_i)
   end
 
   def bootstrap_version
@@ -95,18 +188,6 @@ class Snippet < ActiveRecord::Base
     return self.bootstrapversion.name
     else
       return nil
-    end
-  end
-
-  # Save the bootstrap version given by the virtual attribute bootstrap_version
-  def save_bootstrap_version
-    if self.bootstrap_version.nil?
-      bversion_id = Bootstrapversion.where('name = ?', "3.3.0").first.id
-    self.bootstrapversion_id = bversion_id
-    elsif @bootstrap_version.present?
-      bversion = Bootstrapversion.where('name = ?', @bootstrap_version).first || Bootstrapversion.where('name = ?', "3.3.0").first
-    bversion_id = bversion.id
-    self.bootstrapversion_id = bversion.id
     end
   end
 
@@ -232,7 +313,7 @@ class Snippet < ActiveRecord::Base
     end
   end
 
-  # Find and update the boostrap version
+  # Find and update the bootstrap version
   def get_bootstrap_version
     version = self.tags.where('is_bootstrap = ?', true)
     if version.nil? or version.empty?
@@ -241,8 +322,7 @@ class Snippet < ActiveRecord::Base
       b = version.first.name
       v = Bootstrapversion.find_by(:name => b)
       if v
-      self.bootstrapversion = v
-      self.save
+      v.snippets << self
       end
     end
   end
@@ -259,10 +339,28 @@ class Snippet < ActiveRecord::Base
     self.update_number_views
     self.update_column(:is_analysed, true)
   end
-  
+
+  def global_code_update
+    self.update_html_code
+    self.update_js_code
+    self.update_css_code
+  end
+
   # Snippet.class_method('global_update_crawler')
 
   private
+
+  # Save the bootstrap version given by the virtual attribute bootstrap_version
+  def save_bootstrap_version
+    if self.bootstrap_version.nil?
+      bversion_id = Bootstrapversion.where('name = ?', "3.3.0").first.id
+    self.bootstrapversion_id = bversion_id
+    elsif @bootstrap_version.present?
+      bversion = Bootstrapversion.where('name = ?', @bootstrap_version).first || Bootstrapversion.where('name = ?', "3.3.0").first
+    bversion_id = bversion.id
+    self.bootstrapversion_id = bversion.id
+    end
+  end
 
   def generate_random_token
     require 'securerandom'

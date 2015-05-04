@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :profile]
+  before_action :correct_user, except: [:show]
   # GET /users
   # GET /users.json
   def index
@@ -9,12 +10,13 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @snippets = @user.snippets.paginate(:page => params[:page], :per_page => 20)
+    @snippets = @user.snippets.approved.paginate(:page => params[:page], :per_page => 20)
   end
   
   # Profile page of the user with the snippets
   def profile
     @snippets = @user.snippets.paginate(:page => params[:page], :per_page => 20)
+    @favorite_snippets = @user.favorite_snippets.paginate(:page => params[:page], :per_page => 20)
   end
 
   # GET /users/new
@@ -70,6 +72,20 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.friendly.find(params[:id])
+    end
+    
+    def correct_user
+      if signed_in?
+        if current_user == @user || is_administrator
+          return
+        else
+          redirect_to root_path, notice: "You are not allowed to access this page"
+          return
+        end
+      else
+        redirect_to new_user_session_path, notice: 'You must be log in to perform this action'
+        return
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

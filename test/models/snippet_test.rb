@@ -27,6 +27,7 @@
 #  send_for_approval   :boolean          default(FALSE)
 #  comment_for_refusal :text
 #  is_analysed         :boolean          default(FALSE)
+#  status              :integer          default(0)
 #
 
 require 'test_helper'

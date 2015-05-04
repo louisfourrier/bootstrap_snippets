@@ -5,7 +5,7 @@
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="<%= @snippet.bootstrapversion.css_url %>" rel="stylesheet" id="bootstrap-css">
     <style type="text/css">
-    	<%= @snippet.get_css_code.html_safe %>
+    	<%= @snippet.css_code.to_s.html_safe %>
     </style>
     <script src="<%= @snippet.bootstrapversion.js_url %>"></script>
     <script type="text/javascript">
@@ -19,9 +19,10 @@
     </script>
 </head>
 <body>
-	<%= @snippet.get_raw_html_code.html_safe %>
-	
-
+	<%= @snippet.html_code.to_s.html_safe %>
+	<script type="text/javascript">
+	<%= @snippet.js_code.to_s.html_safe%>
+	</script>
 
 <script type="text/javascript">(function () {
         return window.SIG_EXT = {};

@@ -17,6 +17,9 @@ $(function() {
     }, 500);
   });
   
+  // Initialize the tooltips for this class
+  $('.tooltip-tag').tooltip();
+  
   
 
 });

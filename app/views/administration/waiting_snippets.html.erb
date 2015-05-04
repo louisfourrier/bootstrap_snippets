@@ -1,0 +1,15 @@
+<% provide(:title, "Administration - Waiting Snippets") %>
+<% provide(:description, "Snippets waiting to be approved to be public") %>
+<% provide(:keywords, "snippets, css, js , html, Bootstrap, codes")%>
+
+<div class="col-md-12">
+	<h1 class="page-header text-center">Snippets waiting the Approval of the administrator</h1>
+	<div class="well">
+		Snippets waiting to be approved to be public
+	</div>
+	
+	<div id="insert-snippets" class="col-md-12">
+	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets} %>
+	</div>
+
+</div>

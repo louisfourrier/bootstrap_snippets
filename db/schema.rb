@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150401122537) do
+ActiveRecord::Schema.define(version: 20150429162155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 20150401122537) do
     t.text     "css_assets_url"
     t.text     "js_assets_url"
   end
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "snippet_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "favorites", ["snippet_id"], name: "index_favorites_on_snippet_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "snippets", force: :cascade do |t|
     t.text     "title"
@@ -49,8 +59,10 @@ ActiveRecord::Schema.define(version: 20150401122537) do
     t.boolean  "send_for_approval",   default: false
     t.text     "comment_for_refusal"
     t.boolean  "is_analysed",         default: false
+    t.integer  "status",              default: 0
   end
 
+  add_index "snippets", ["status"], name: "index_snippets_on_status", using: :btree
   add_index "snippets", ["token"], name: "index_snippets_on_token", using: :btree
   add_index "snippets", ["user_id"], name: "index_snippets_on_user_id", using: :btree
 
@@ -109,6 +121,8 @@ ActiveRecord::Schema.define(version: 20150401122537) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["slug"], name: "index_users_on_slug", using: :btree
 
+  add_foreign_key "favorites", "snippets"
+  add_foreign_key "favorites", "users"
   add_foreign_key "snippets", "users"
   add_foreign_key "taggings", "tags"
 end

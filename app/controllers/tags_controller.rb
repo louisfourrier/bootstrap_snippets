@@ -1,7 +1,7 @@
 class TagsController < ApplicationController
+  before_action :is_administrator?, except: [:show, :index]
   before_action :set_tag, only: [:show, :edit, :update, :destroy]
-  before_filter :is_administrator?, only: [:edit, :update, :destroy, :create, :new] 
-
+  
   # GET /tags
   # GET /tags.json
   def index
@@ -15,7 +15,7 @@ class TagsController < ApplicationController
   # GET /tags/1
   # GET /tags/1.json
   def show
-    @snippets = @tag.snippets.paginate(:page => params[:page], :per_page => 20)
+    @snippets = @tag.snippets.approved.paginate(:page => params[:page], :per_page => 20)
   end
 
   # GET /tags/new

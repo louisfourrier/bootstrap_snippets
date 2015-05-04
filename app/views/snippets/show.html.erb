@@ -1,6 +1,6 @@
-<% provide(:title, @snippet.title) %>
-<% provide(:description, "Description" ) %>
-<% provide(:keywords, "keyword1, keyword2")%>
+<% provide(:title, @snippet.title + " Snippet of code") %>
+<% provide(:description, "Snippet of code built with Bootstrap version " + @snippet.bootstrapversion.name.to_s + " " + @snippet.title ) %>
+<% provide(:keywords, @tags.all.joins(','))%>
 
 <div class="row">
 	<div class="col-sm-3 col-md-2 sidebar">
@@ -17,9 +17,15 @@
 				</button>
 			</div>
 			<div class="btn-group">
-				<button type="button" class="btn text-uppercase btn btn-primary" >
-					<i class="fa fa-star"></i> 67
-				</button>
+				<% if current_user && @snippet.is_favorite(current_user)%>
+					<%= link_to favorite_snippet_path(@snippet), type:"button", class:"btn text-uppercase btn btn-primary color-yellow tooltip-tag", title: "This Snippet is in your favorites" do %>
+						<i class="fa fa-star"></i> <%= @snippet.favorites.size%>
+					<% end %>
+				<% else %>
+					<%= link_to favorite_snippet_path(@snippet), type:"button", class:"btn text-uppercase btn btn-primary tooltip-tag", title: "Add this Snippet in your favorites" do %>
+						<i class="fa fa-star"></i>  <%= @snippet.favorites.size%>
+					<% end %>
+				<% end %>
 			</div>
 		</div>
 
@@ -46,19 +52,35 @@
 
 		<% end %>
 
-		<div>
+		<div class="text-center">
 			Made by:
 			<i class="fa fa-user"></i>
 			<%= link_to @snippet.user.pseudo, @snippet.user %>
 		</div>
 
-		<div>
-			<%= link_to iframe_snippet_path(@snippet), class: "btn btn-default", target: "_blank" do  %>
-			<i class="fa fa-desktop"></i> Full screen
+		<div class="text-center">
+			<div class="btn-group-vertical" role="group" aria-label="..." >
+				<%= link_to iframe_snippet_path(@snippet), class: "btn btn-default", target: "_blank", type: "button" do  %>
+				<i class="fa fa-desktop"></i> Full screen
+				<% end %>
+
+				<%= link_to fork_snippet_snippet_path(@snippet), class: "btn btn-info", type: "button" do  %>
+				<i class="fa fa-retweet"></i> Fork Snippet</span>
+				<% end %>
+				
+				<% if current_user == @snippet.user || is_administrator%>
+				
+				<%= link_to edit_snippet_path(@snippet), class: "btn btn-warning", type: "button" do %>
+					<i class="fa fa-edit"></i> Edit Snippet
+				<% end %>
+			
 			<% end %>
+			</div>
+
 		</div>
 
 		<div class="text-center">
+			<div class="text-center">Share</div>
 			<ul class="share-buttons">
 				<li>
 					<a href="https://www.facebook.com/sharer/sharer.php?u=&t=" target="_blank" title="Share on Facebook" class="color-facebook"><i class="fa fa-facebook-square fa-2x color-facebook"></i></a>
@@ -74,6 +96,20 @@
 				</li>
 			</ul>
 		</div>
+		
+	
+			<% if is_administrator %>
+		<div class="text-center">
+			<div>Status: <%= @snippet.human_status%></div>
+			
+			<div class="btn-group-vertical" role="group" aria-label="..." >
+				<%= link_to "Accept", admin_status_snippet_path(@snippet, :status => 2), class: "btn btn-success"%>
+				<%= link_to "Refuse", admin_status_snippet_path(@snippet, :status => 3), class: "btn btn-danger"%>
+				<%= link_to "Waiting", admin_status_snippet_path(@snippet, :status => 1), class: "btn btn-warning"%>
+			</div>
+		</div>
+		<% end %>
+	
 
 	</div>
 
@@ -121,25 +157,19 @@
 
 					<div>
 
-						<div id="editor-html" class="ace-editor-class">
-							<%= @snippet.get_html_code%>
-						</div>
+						<div id="editor-html" class="ace-editor-class"><%= @snippet.html_code%></div>
 					</div>
 				</div>
 				<div role="tabpanel" class="tab-pane" id="css-code">
 					<div>
 
-						<div id="editor-css" class="ace-editor-class">
-							<%= @snippet.get_css_code%>
-						</div>
+						<div id="editor-css" class="ace-editor-class"><%= @snippet.css_code%></div>
 					</div>
 				</div>
 				<div role="tabpanel" class="tab-pane" id="js-code">
 					<div>
 
-						<div id="editor-js" class="ace-editor-class">
-							<%= @snippet.get_js_code%>
-						</div>
+						<div id="editor-js" class="ace-editor-class"><%= @snippet.js_code%></div>
 					</div>
 
 				</div>
@@ -167,7 +197,7 @@
 						<% end %>
 						<div class="text-center">
 							<% snippet.tags.each do |tag| %>
-							<%= link_to tag do %><span class="label label-primary"><%= tag.name %></span><% end %>
+							<%= link_to tag do %><span class="label label-primary tag-label"><%= tag.name %></span><% end %>
 
 							<% end %>
 						</div>
@@ -199,8 +229,9 @@
 	</div>
 
 </div>
+<!-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
-
+<-->
 <script>
 	$(function() {
 

@@ -17,10 +17,10 @@
 			<%= link_to edit_snippet_path(snippet) do %>
 			<img src="<%= snippet.image_url %>" alt="<%= snippet.title %>">
 			<% end %>
+			
 			<div class="text-center">
 				<% snippet.tags.each do |tag| %>
 				<%= link_to tag do %><span class="label label-primary tag-label"><%= tag.name %></span><% end %>
-
 				<% end %>
 			</div>
 			

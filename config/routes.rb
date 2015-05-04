@@ -1,9 +1,18 @@
 Rails.application.routes.draw do
 
+  get 'administration/home'
+
+  get 'administration/waiting_snippets'
+
   resources :bootstrapversions
+  
   resources :snippets do
     member do
       get 'iframe'
+      get 'user_status'
+      get 'admin_status'
+      get 'favorite'
+      get 'fork_snippet'
     end
   end
 

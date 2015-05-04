@@ -49,6 +49,9 @@ class User < ActiveRecord::Base
   # has_many :roles, dependent: :destroy
   # has_many :users, through: :memberships
   has_many :snippets
+  
+  has_many :favorites
+  has_many :favorite_snippets, through: :favorites, :class_name => "Snippet", :source => :snippet
 
   ##-- Scopes ----------------------
   # scope :active, -> { where(active: true) }

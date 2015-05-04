@@ -1,8 +1,8 @@
-<% provide(:title, @tag.name) %>
+<% provide(:title, "Snippets of codes tagged with " + @tag.name) %>
 <% provide(:description, "All the bootstrap snippets tagged with " + @tag.name ) %>
-<% provide(:keywords, "bootstrap, snippets," + @tag.name)%>
+<% provide(:keywords, "Bootstrap, snippets, code , development, Snippets, HTML, JS, CSS, " + @tag.name)%>
 
-<h1 class="page-header text-center">Snippets tagged with #<%= @tag.name %> (<%= @tag.snippets.count %>)</h1>
+<h1 class="page-header text-center">Snippets tagged with #<%= link_to @tag.name, @tag %> (<%= @tag.snippets.count %>)</h1>
 
 <div id="insert-snippets" class="col-md-12">
 	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets} %>
@@ -10,7 +10,6 @@
 
 <% if is_administrator %>
 <%= link_to 'Edit', edit_tag_path(@tag), :class => "btn btn-warning"  %>
-
 <% end %>
 
 <div class="text-center">
