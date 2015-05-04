@@ -317,7 +317,7 @@ class Snippet < ActiveRecord::Base
   def get_bootstrap_version
     version = self.tags.where('is_bootstrap = ?', true)
     if version.nil? or version.empty?
-    return
+      return
     else
       b = version.first.name
       v = Bootstrapversion.find_by(:name => b)
