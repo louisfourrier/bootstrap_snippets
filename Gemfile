@@ -46,6 +46,8 @@ gem 'exception_notification'
 gem 'sitemap_generator'
 # For in place editing of input
 gem 'best_in_place'
+# For counters
+gem 'counter_culture'
 
 gem 'newrelic_rpm'
 

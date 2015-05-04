@@ -27,7 +27,7 @@ class Tagging < ActiveRecord::Base
   ##-- Associations ----------------
   # has_many :roles, dependent: :destroy
   # has_many :users, through: :memberships
-  belongs_to :tag
+  belongs_to :tag, counter_cache: true
   belongs_to :taggable, polymorphic: true
   
   has_many :snippets, :through => :taggings, source: :taggable, source_type: "Snippet"

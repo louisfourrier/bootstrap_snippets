@@ -12,6 +12,7 @@
 #  updated_at     :datetime         not null
 #  snippets_count :integer
 #  is_bootstrap   :boolean          default(FALSE)
+#  taggings_count :integer          default(0), not null
 #
 
 class Tag < ActiveRecord::Base
@@ -47,6 +48,12 @@ class Tag < ActiveRecord::Base
   def title 
     self.name
   end 
+  
+  # Check the counters for taggings
+  def self.check_favorite_count
+    self.find_each { |tag| Tag.reset_counters(tag.id, :taggings) }
+  end
+
   
   # Distinguish tags from the bootstrap version of the snippets
   def update_bootstrap_version

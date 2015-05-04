@@ -28,7 +28,9 @@
 #  comment_for_refusal :text
 #  is_analysed         :boolean          default(FALSE)
 #  status              :integer          default(0)
+#  favorites_count     :integer          default(0), not null
 #
+
 class Snippet < ActiveRecord::Base
   ##-- Requirements and Concerns ---
   include CommonMethods
@@ -76,6 +78,38 @@ class Snippet < ActiveRecord::Base
   def to_param
     return "#{id}-#{title}".parameterize
   end
+  
+  # Method that handles all the filtering of the params
+  def self.filter(attributes)
+    attributes.inject(self) do |scope, (key, value)|
+      #return scope.scoped if value.blank?
+      if value.blank?
+        scope.all
+      else
+          case key.to_sym
+          when :bootstrap_version
+            bootstrap_version = Bootstrapversion.find_by(:name => "%#{value}%")
+            scope.where("snippets.bootstrapversion_id = ?", bootstrap_version.id)
+          when :search_name # regexp search
+            scope.where('snippets.title ilike ? OR snippets.research_name ilike ?', "%#{value}%", "%#{value}%")
+          when :starting_letter # regexp search
+            letter = I18n.transliterate(value.to_s.strip.downcase).to_s
+            puts letter
+            scope.where('snippets.title ILIKE ? OR snippets.research_name ILIKE ?', "%#{letter}%", "%#{letter}%")
+          when :status
+            status = "#{value}".to_s.to_i
+            scope.where(:status => status)
+          when :order # order=field-(ASC|DESC)
+            attribute, order = value.split("-") 
+            scope.order("#{self.table_name}.#{attribute} #{order}")
+          else # unknown key (do nothing or raise error, as you prefer to)
+          scope.all
+          end 
+      end
+    end
+  end
+  
+  #Snippet.filter({:starting_letter => "image"})
 
   # Class method to create a new snippet from scratch. Pass the User etc...
   def self.create_new(user)
@@ -344,6 +378,10 @@ class Snippet < ActiveRecord::Base
     self.update_html_code
     self.update_js_code
     self.update_css_code
+  end
+  
+  def self.check_favorite_count
+    self.find_each { |snippet| Snippet.reset_counters(snippet.id, :favorites) }
   end
 
   # Snippet.class_method('global_update_crawler')

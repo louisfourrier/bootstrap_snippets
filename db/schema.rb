@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429162155) do
+ActiveRecord::Schema.define(version: 20150504132647) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 20150429162155) do
     t.text     "comment_for_refusal"
     t.boolean  "is_analysed",         default: false
     t.integer  "status",              default: 0
+    t.integer  "favorites_count",     default: 0,     null: false
   end
 
   add_index "snippets", ["status"], name: "index_snippets_on_status", using: :btree
@@ -87,6 +88,7 @@ ActiveRecord::Schema.define(version: 20150429162155) do
     t.datetime "updated_at",                     null: false
     t.integer  "snippets_count"
     t.boolean  "is_bootstrap",   default: false
+    t.integer  "taggings_count", default: 0,     null: false
   end
 
   add_index "tags", ["slug"], name: "index_tags_on_slug", using: :btree

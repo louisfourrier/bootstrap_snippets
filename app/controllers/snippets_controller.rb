@@ -10,10 +10,16 @@ class SnippetsController < ApplicationController
 
     letter = params[:starting_letter]
     if !letter.nil?
-      @letter = I18n.transliterate(letter.to_s.strip.downcase).to_s
-      @snippets = Snippet.approved.where('snippets.title ilike ? OR snippets.research_name ilike ?', "%#{@letter}%", "%#{@letter}%").includes(:tags).paginate(:page => params[:page], :per_page => 20)
+      #@letter = I18n.transliterate(letter.to_s.strip.downcase).to_s
+      #@snippets = Snippet.approved.where('snippets.title ilike ? OR snippets.research_name ilike ?', "%#{@letter}%", "%#{@letter}%").includes(:tags).paginate(:page => params[:page], :per_page => 20)
+      @snippets = Snippet.approved.filter(params).includes(:tags).paginate(:page => params[:page], :per_page => 20)
     else
       @snippets = Snippet.approved.includes(:tags).paginate(:page => params[:page], :per_page => 20)
+    end
+    
+    respond_to do |format|
+      format.html
+      format.js { render "/snippets/insert_snippets" }
     end
   end
 

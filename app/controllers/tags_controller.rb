@@ -15,7 +15,11 @@ class TagsController < ApplicationController
   # GET /tags/1
   # GET /tags/1.json
   def show
-    @snippets = @tag.snippets.approved.paginate(:page => params[:page], :per_page => 20)
+    @snippets = @tag.snippets.approved.filter(params).includes(:tags).paginate(:page => params[:page], :per_page => 20)
+    respond_to do |format|
+      format.html
+      format.js { render "/snippets/insert_snippets" }
+    end
   end
 
   # GET /tags/new

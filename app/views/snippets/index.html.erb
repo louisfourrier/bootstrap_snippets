@@ -2,7 +2,7 @@
 <% provide(:description, "All the Snippets of HTML code built with the Bootstrap framework. Get the preview, the HTML code, the CSS style and the javascript code. Emebed it in your site" ) %>
 <% provide(:keywords, "Snippets of code, HTML, JS, CSS3, Bootstrap, framework, web-developers")%>
 
-<h1 class="text-center">All the Bootstrap Snippets</h1>
+<h1 class="text-center">All the Bootstrap Snippets <%= link_to new_snippet_path, :class => "btn btn-primary" do %><i class="fa fa-plus"></i> New Snippet<% end %></h1>
 
 <div class="row">
 	<div class="col-md-6 col-md-offset-3">
@@ -16,7 +16,7 @@
 </div>
 
 
-<%= link_to 'New Snippet', new_snippet_path, :class => "btn btn-success" %>
+
 
 <script>
 	$(function() {

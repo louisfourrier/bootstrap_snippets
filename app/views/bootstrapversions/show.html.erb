@@ -2,13 +2,38 @@
 <% provide(:description, "All the html, css and js snippets codes for bootstrap version " + @bootstrapversion.name ) %>
 <% provide(:keywords, "snippets, css, js , html, Bootstrap, codes," + @bootstrapversion.name)%>
 
-<h1 class="page-header text-center">Snippets for Bootstrap version <%= @bootstrapversion.name %></h1>
+<h1 class="text-center">Snippets for Bootstrap version <%= @bootstrapversion.name %></h1>
 
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<input id="firstletters" type="text" name="firstletter" class="form-control search-input" autofocus="autofocus" placeholder="Search a snippet" value="<%= params[:starting_letter] %>" />
+	</div>
+</div>
 
 <div id="insert-snippets" class="col-md-12">
 	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets} %>
 </div>
 
+<script>
+	$(function() {
+	var timeout;
+	$("#firstletters").on('input',function(e){
+	window.clearTimeout(timeout);
+	timeout = window.setTimeout(function(){
+		$("#insert-snippets").html('<div class="text-center"><%= j image_tag "loading-glasses.gif"%></div>');
+			var letters = $("#firstletters").val();
+			$.ajax({
+				url : "",
+				type : "GET",
+				dataType: "script",
+				data : {
+				starting_letter : letters
+				}
+			})
+	},500);
+	})
+	});
+</script>
 
 
 <%= link_to 'Edit', edit_bootstrapversion_path(@bootstrapversion), :class => "btn btn-warning"  %> |

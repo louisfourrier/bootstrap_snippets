@@ -2,7 +2,13 @@
 <% provide(:description, "All the bootstrap snippets tagged with " + @tag.name ) %>
 <% provide(:keywords, "Bootstrap, snippets, code , development, Snippets, HTML, JS, CSS, " + @tag.name)%>
 
-<h1 class="page-header text-center">Snippets tagged with #<%= link_to @tag.name, @tag %> (<%= @tag.snippets.count %>)</h1>
+<h1 class="text-center">Snippets tagged with #<%= link_to @tag.name, @tag %> (<%= @tag.snippets.count %>)</h1>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<input id="firstletters" type="text" name="firstletter" class="form-control search-input" autofocus="autofocus" placeholder="Search a snippet" value="<%= params[:starting_letter] %>" />
+	</div>
+</div>
 
 <div id="insert-snippets" class="col-md-12">
 	<%= render partial: "snippets/snippets_list", locals: {snippets: @snippets} %>
@@ -15,3 +21,25 @@
 <div class="text-center">
 	<%= link_to '<- Back to all tags', tags_path, :class => "btn btn-primary"  %>
 </div>
+
+
+<script>
+	$(function() {
+	var timeout;
+	$("#firstletters").on('input',function(e){
+	window.clearTimeout(timeout);
+	timeout = window.setTimeout(function(){
+		$("#insert-snippets").html('<div class="text-center"><%= j image_tag "loading-glasses.gif"%></div>');
+			var letters = $("#firstletters").val();
+			$.ajax({
+				url : "",
+				type : "GET",
+				dataType: "script",
+				data : {
+				starting_letter : letters
+				}
+			})
+	},500);
+	})
+	});
+</script>

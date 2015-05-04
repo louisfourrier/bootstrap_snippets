@@ -7,7 +7,11 @@ class BootstrapversionsController < ApplicationController
   end
 
   def show
-    @snippets = @bootstrapversion.snippets.approved.paginate(:page => params[:page], :per_page => 20)
+    @snippets = @bootstrapversion.snippets.approved.filter(params).paginate(:page => params[:page], :per_page => 20)
+    respond_to do |format|
+      format.html
+      format.js { render "/snippets/insert_snippets" }
+    end
   end
 
   def new

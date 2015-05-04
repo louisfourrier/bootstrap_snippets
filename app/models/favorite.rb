@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: favorites
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  snippet_id :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Favorite < ActiveRecord::Base
   ##-- Requirements and Concerns ---
   
@@ -19,7 +30,7 @@ class Favorite < ActiveRecord::Base
   # has_many :users, through: :memberships
   
   belongs_to :user
-  belongs_to :snippet
+  belongs_to :snippet, counter_cache: true
   
   ##-- Scopes ----------------------
   # scope :active, -> { where(active: true) }

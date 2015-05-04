@@ -28,6 +28,7 @@
 #  comment_for_refusal :text
 #  is_analysed         :boolean          default(FALSE)
 #  status              :integer          default(0)
+#  favorites_count     :integer          default(0), not null
 #
 
 require 'test_helper'

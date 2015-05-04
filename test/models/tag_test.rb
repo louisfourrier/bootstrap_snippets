@@ -12,6 +12,7 @@
 #  updated_at     :datetime         not null
 #  snippets_count :integer
 #  is_bootstrap   :boolean          default(FALSE)
+#  taggings_count :integer          default(0), not null
 #
 
 require 'test_helper'

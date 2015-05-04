@@ -9,7 +9,7 @@
 	<% @tags.each do |tag| %>
 		<li class="col-md-4 col-sm-6 col-xs-12 col-lg-3 ">
 			<%= link_to tag do %>
-			<span class="badge pull-right"><%= tag.snippets_count %></span>
+			<span class="badge pull-right"><%= tag.taggings.size %></span>
 			<%= tag.name %>
 			<%end %>
 		</li>
