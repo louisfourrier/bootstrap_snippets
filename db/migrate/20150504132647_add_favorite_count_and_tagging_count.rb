@@ -3,7 +3,7 @@ class AddFavoriteCountAndTaggingCount < ActiveRecord::Migration
     add_column :snippets, :favorites_count, :integer, :null => false, :default => 0
     add_column :tags, :taggings_count, :integer, :null => false, :default => 0
     
-    Tagging.counter_culture_fix_counts
-    Favorite.counter_culture_fix_counts
+    Snippet.check_favorites_count
+    Tag.check_taggings_count
   end
 end

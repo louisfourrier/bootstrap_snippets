@@ -380,7 +380,7 @@ class Snippet < ActiveRecord::Base
     self.update_css_code
   end
   
-  def self.check_favorite_count
+  def self.check_favorites_count
     self.find_each { |snippet| Snippet.reset_counters(snippet.id, :favorites) }
   end
 

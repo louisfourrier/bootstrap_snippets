@@ -50,7 +50,7 @@ class Tag < ActiveRecord::Base
   end 
   
   # Check the counters for taggings
-  def self.check_favorite_count
+  def self.check_taggings_count
     self.find_each { |tag| Tag.reset_counters(tag.id, :taggings) }
   end
 
